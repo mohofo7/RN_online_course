@@ -1,12 +1,42 @@
-import { Navigation } from 'react-native-navigation'
+import React , {Component} from 'react'
+import {View,Text,StyleSheet,AsyncStorage} from 'react-native'
 
-import HomeScreen from './src/components/views/Home/index'
-import LoginScreen from './src/components/views/Login/index'
-import ExploreScreen from './src/components/views/Explore/index'
-import ExamsScreen from './src/components/views/Exams/index'
-import ProfileScreen from './src/components/views/Profile/index'
+import { goToAuth, goToHome } from './src/navigation'
 
-Navigation.registerComponent("online_course.home" , ()=> HomeScreen);
-Navigation.registerComponent("online_course.explore" , ()=> ExploreScreen);
-Navigation.registerComponent("online_course.exams" , ()=> ExamsScreen);
-Navigation.registerComponent("online_course.profile" , ()=> ProfileScreen);
+import { USER_KEY } from './src/config'
+
+export default class Initializing extends Component {
+  async componentDidMount() {
+    try {
+      const user = await AsyncStorage.getItem(USER_KEY)
+      console.log('user: ', user)
+      if (true) {
+        goToHome()
+      } else {
+        goToAuth()
+      }
+    } catch (err) {
+      console.log('error: ', err)
+      goToAuth()
+    }
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.welcome}>Loading</Text>
+      </View>
+    )
+  }
+}
+
+const styles = StyleSheet.create({
+  welcome: {
+    fontSize: 28
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+})
